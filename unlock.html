@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Sync — My Drive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{
+  --blue:#1a73e8;--blue-h:#1557b0;--red:#d93025;--red-bg:#fce8e6;
+  --green:#1e8e3e;--grn-bg:#e6f4ea;
+  --bg:#f8f9fa;--surf:#ffffff;--hov:#f1f3f4;--border:#dadce0;
+  --t1:#202124;--t2:#3c4043;--t3:#5f6368;--t4:#80868b;
+  --gs:'Google Sans','Roboto',system-ui,sans-serif;
+  --rb:'Roboto',system-ui,sans-serif;
+  --r:4px;--rl:12px;--tr:.2s cubic-bezier(.4,0,.2,1);
+}
+body{
+  font-family:var(--rb);background:var(--bg);color:var(--t2);
+  -webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.unlock-card{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--rl);
+  padding:48px 40px;width:100%;max-width:400px;box-shadow:0 1px 3px rgba(60,64,67,.15);
+}
+.unlock-header{text-align:center;margin-bottom:32px}
+.unlock-header svg{width:48px;height:48px;color:var(--t3);margin-bottom:12px}
+.unlock-header h1{font-family:var(--gs);font-size:1.5rem;font-weight:500;color:var(--t1);margin-bottom:4px}
+.unlock-header p{font-size:.875rem;color:var(--t3)}
+.field{margin-bottom:20px}
+.field-label{display:block;font-size:.75rem;font-weight:500;color:var(--t3);margin-bottom:4px;letter-spacing:.3px}
+.field-input{
+  width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:var(--r);
+  font-family:var(--rb);font-size:.95rem;color:var(--t1);background:var(--surf);
+  outline:none;transition:border var(--tr)
+}
+.field-input:hover{border-color:var(--t3)}
+.field-input:focus{border:2px solid var(--blue);padding:11px 13px}
+.alert{padding:10px 14px;border-radius:var(--r);font-size:.8rem;margin-bottom:16px;display:none}
+.alert-e{display:block;background:var(--red-bg);color:var(--red);border:1px solid rgba(217,48,37,.2)}
+.alert-s{display:block;background:var(--grn-bg);color:var(--green);border:1px solid rgba(30,142,62,.2)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:12px 24px;font-family:var(--gs);font-size:.875rem;font-weight:500;
+  border:none;border-radius:var(--r);cursor:pointer;transition:all var(--tr);
+  text-decoration:none;white-space:nowrap;width:100%
+}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-h);box-shadow:0 1px 2px rgba(60,64,67,.3),0 2px 6px rgba(60,64,67,.15)}
+.btn-primary:disabled{background:var(--hov);color:var(--t4);cursor:not-allowed;box-shadow:none}
+.btn-outline{background:transparent;color:var(--blue);border:1px solid var(--border);width:auto;padding:10px 18px;font-size:.8rem}
+.btn-outline:hover{background:#e8f0fe;border-color:var(--blue)}
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{
+  position:fixed;bottom:24px;left:24px;z-index:9999;padding:14px 24px;
+  border-radius:var(--r);background:#323232;color:#f5f5f5;font-size:.875rem;
+  box-shadow:0 3px 5px -1px rgba(0,0,0,.2),0 6px 10px rgba(0,0,0,.14);
+  transform:translateY(80px);opacity:0;transition:all .25s cubic-bezier(0,0,.2,1);pointer-events:none
+}
+.toast.show{transform:translateY(0);opacity:1}
+.small-link{display:block;text-align:center;margin-top:16px}
+.small-link button{background:none;border:none;color:var(--blue);cursor:pointer;font-family:var(--rb);font-size:.8rem;font-weight:500}
+.small-link button:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<div class="unlock-card">
+  <div class="unlock-header">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </svg>
+    <h1>Enter passphrase to sync</h1>
+    <p>Your passphrase is needed to access your files</p>
+  </div>
+  <div class="alert" id="alert"></div>
+  <form id="unlockForm" autocomplete="off">
+    <div class="field">
+      <label class="field-label" for="passphrase">Passphrase</label>
+      <input type="password" class="field-input" id="passphrase" required placeholder="Enter your passphrase">
+    </div>
+    <button type="submit" class="btn btn-primary" id="submitBtn">
+      <span id="btnText">Unlock</span>
+      <span class="spinner" id="spinner"></span>
+    </button>
+  </form>
+  <div class="small-link">
+    <button onclick="window.location.href='index.html'">Back to sign in</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const token = localStorage.getItem('sw_token');
+const user = JSON.parse(localStorage.getItem('sw_user') || 'null');
+
+if (!token || !user) {
+  window.location.href = 'index.html';
+}
+
+const API = '/api';
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function showAlert(msg, type) {
+  const el = document.getElementById('alert');
+  el.textContent = msg;
+  el.className = type === 'success' ? 'alert alert-s' : 'alert alert-e';
+}
+
+function clearAlert() {
+  const el = document.getElementById('alert');
+  el.className = 'alert';
+  el.textContent = '';
+}
+
+function setLoading(loading) {
+  document.getElementById('submitBtn').disabled = loading;
+  document.getElementById('spinner').style.display = loading ? 'inline-block' : 'none';
+  document.getElementById('btnText').style.display = loading ? 'none' : 'inline';
+}
+
+// Derive AES-GCM key from passphrase + salt using PBKDF2
+async function deriveKey(passphrase, salt) {
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw', encoder.encode(passphrase), 'PBKDF2', false, ['deriveKey']
+  );
+  return await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: encoder.encode(salt), iterations: 100000, hash: 'SHA-256' },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  );
+}
+
+async function encrypt(text, key) {
+  const encoder = new TextEncoder();
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const encrypted = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    encoder.encode(text)
+  );
+  const encryptedArray = Array.from(new Uint8Array(encrypted));
+  const ivB64 = btoa(String.fromCharCode(...iv));
+  const dataB64 = btoa(String.fromCharCode(...encryptedArray));
+  return { encrypted: dataB64, iv: ivB64 };
+}
+
+async function decrypt(encryptedB64, ivB64, key) {
+  try {
+    const iv = Uint8Array.from(atob(ivB64), c => c.charCodeAt(0));
+    const encrypted = Uint8Array.from(atob(encryptedB64), c => c.charCodeAt(0));
+    const decrypted = await crypto.subtle.decrypt(
+      { name: 'AES-GCM', iv },
+      key,
+      encrypted
+    );
+    return new TextDecoder().decode(decrypted);
+  } catch {
+    return null;
+  }
+}
+
+document.getElementById('unlockForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  clearAlert();
+  const passphrase = document.getElementById('passphrase').value;
+  if (!passphrase) { showAlert('Please enter your passphrase.'); return; }
+
+  setLoading(true);
+  try {
+    // Get salt from server
+    const saltRes = await fetch(API + '/auth/salt');
+    const saltData = await saltRes.json();
+    const salt = saltData.salt || 'default-salt-value';
+
+    // Derive key
+    const key = await deriveKey(passphrase, salt);
+
+    // Verify by encrypting a known test string and storing it temporarily
+    const testEncrypted = await encrypt('__verify__', key);
+    localStorage.setItem('sw_test_encrypted', JSON.stringify(testEncrypted));
+
+    // Verify we can decrypt it back
+    const decrypted = await decrypt(testEncrypted.encrypted, testEncrypted.iv, key);
+    if (decrypted !== '__verify__') {
+      showAlert('Incorrect passphrase.');
+      setLoading(false);
+      return;
+    }
+
+    // Store key in session storage (RAM only, cleared on tab close)
+    const rawKey = await crypto.subtle.exportKey('raw', key);
+    const keyB64 = btoa(String.fromCharCode(...new Uint8Array(rawKey)));
+    sessionStorage.setItem('sw_master_key', keyB64);
+    localStorage.setItem('sw_salt', salt);
+
+    localStorage.removeItem('sw_test_encrypted');
+    showToast('Synced successfully.');
+    setTimeout(() => { window.location.href = 'drive.html'; }, 300);
+  } catch {
+    showAlert('Incorrect passphrase.');
+    setLoading(false);
+  }
+});
+</script>
+</body>
+</html>
