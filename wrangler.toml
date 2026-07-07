@@ -1,0 +1,8 @@
+name = "server-sw001"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "SW_DB"
+database_name = "server-sw001"
+database_id = "4a75bd6e-3c39-4c49-8adc-f6cb61dd9700"
