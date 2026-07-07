@@ -23,46 +23,49 @@ html{scroll-behavior:smooth}
 body{font-family:var(--rb);background:var(--bg);color:var(--t2);-webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh}
 .header{position:fixed;top:0;left:0;right:0;height:var(--hh);background:var(--surf);border-bottom:1px solid var(--border);z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
 .header-left{display:flex;align-items:center;gap:16px}
-.header-left .back-btn{display:flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;font-family:var(--gs);font-size:.9rem;color:var(--t3)}
-.header-left .back-btn:hover{color:var(--blue)}
-.header-left .back-btn svg{width:20px;height:20px}
+.back-btn{display:flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;font-family:var(--gs);font-size:.9rem;color:var(--t3)}
+.back-btn:hover{color:var(--blue)}
+.back-btn svg{width:20px;height:20px}
 .logo-text{font-family:var(--gs);font-size:1.15rem;font-weight:500;color:var(--t1)}
 .header-right{display:flex;align-items:center;gap:8px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 18px;font-family:var(--gs);font-size:.85rem;font-weight:500;border:none;border-radius:var(--r);cursor:pointer;transition:all var(--tr);text-decoration:none;white-space:nowrap}
 .btn-primary{background:var(--blue);color:#fff}
 .btn-primary:hover{background:var(--blue-h);box-shadow:0 1px 2px rgba(60,64,67,.3),0 2px 6px rgba(60,64,67,.15)}
+.btn-primary:disabled{background:var(--hov);color:var(--t4);cursor:not-allowed;box-shadow:none}
 .btn-outline{background:transparent;color:var(--blue);border:1px solid var(--border)}
 .btn-outline:hover{background:#e8f0fe;border-color:var(--blue)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{opacity:.9}
 .icon-btn{width:40px;height:40px;border:none;background:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t3);transition:background var(--tr);flex-shrink:0}
 .icon-btn:hover{background:var(--hov)}
 .icon-btn svg{width:20px;height:20px}
-.main{padding-top:calc(var(--hh) + 24px);max-width:1000px;margin:0 auto;padding-left:24px;padding-right:24px;padding-bottom:40px}
+.main{padding-top:calc(var(--hh) + 24px);max-width:900px;margin:0 auto;padding-left:24px;padding-right:24px;padding-bottom:40px}
 .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
-.toolbar h2{font-family:var(--gs);font-size:1.3rem;font-weight:500;color:var(--t1)}
+.toolbar h2{font-family:var(--gs);font-size:1.3rem;font-weight:500;color:var(--t1);word-break:break-word}
+.toolbar-actions{display:flex;gap:8px}
 .items-list{display:flex;flex-direction:column;gap:8px}
-.item-row{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all var(--tr)}
+.item-row{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:14px;transition:all var(--tr)}
 .item-row:hover{box-shadow:0 1px 3px rgba(60,64,67,.15);border-color:var(--t4)}
 .item-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
 .item-icon svg{width:18px;height:18px}
 .item-info{flex:1;min-width:0}
 .item-title{font-family:var(--gs);font-size:.9rem;font-weight:500;color:var(--t1)}
 .item-sub{font-size:.8rem;color:var(--t4);margin-top:2px}
-.item-actions{display:flex;gap:4px}
 .spinner-lg{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:60px auto}
 @keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
 .alert{padding:10px 14px;border-radius:var(--r);font-size:.8rem;margin-bottom:16px;display:none;max-width:400px}
 .alert-e{display:block;background:var(--red-bg);color:var(--red);border:1px solid rgba(217,48,37,.2)}
+.alert-s{display:block;background:var(--grn-bg);color:var(--green);border:1px solid rgba(30,142,62,.2)}
 .empty-state{text-align:center;padding:80px 20px}
 .empty-state svg{width:64px;height:64px;color:var(--t4);margin-bottom:16px}
 .empty-state h3{font-family:var(--gs);font-size:1.1rem;font-weight:500;color:var(--t2);margin-bottom:8px}
 .empty-state p{font-size:.875rem;color:var(--t3);margin-bottom:20px}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.open{display:flex}
-.modal{background:var(--surf);border:1px solid var(--border);border-radius:var(--rl);padding:32px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 50px rgba(0,0,0,.3)}
+.modal{background:var(--surf);border:1px solid var(--border);border-radius:var(--rl);padding:32px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 50px rgba(0,0,0,.3)}
 .modal h3{font-family:var(--gs);font-size:1.2rem;font-weight:500;color:var(--t1);margin-bottom:20px}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
-.btn-danger{background:var(--red);color:#fff}
-.btn-danger:hover{opacity:.9}
 .field{margin-bottom:16px}
 .field-label{display:block;font-size:.75rem;font-weight:500;color:var(--t3);margin-bottom:4px;letter-spacing:.3px}
 .field-input,.field-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--r);font-family:var(--rb);font-size:.9rem;color:var(--t1);background:var(--surf);outline:none;transition:border var(--tr)}
@@ -76,10 +79,13 @@ body{font-family:var(--rb);background:var(--bg);color:var(--t2);-webkit-font-smo
 .type-option svg{width:16px;height:16px}
 .toast{position:fixed;bottom:24px;left:24px;z-index:9999;padding:14px 24px;border-radius:var(--r);background:#323232;color:#f5f5f5;font-size:.875rem;box-shadow:0 3px 5px -1px rgba(0,0,0,.2),0 6px 10px rgba(0,0,0,.14);transform:translateY(80px);opacity:0;transition:all .25s cubic-bezier(0,0,.2,1);pointer-events:none}
 .toast.show{transform:translateY(0);opacity:1}
-.copy-btn{background:none;border:none;color:var(--blue);cursor:pointer;font-size:.8rem;padding:2px 6px}
+.copy-btn{background:none;border:none;color:var(--blue);cursor:pointer;font-size:.75rem;padding:2px 6px;font-family:var(--gs);font-weight:500}
 .copy-btn:hover{text-decoration:underline}
-.image-preview{max-width:100%;border-radius:var(--r);margin-top:8px}
-@media(max-width:600px){.main{padding-left:16px;padding-right:16px}.item-row{padding:12px 14px}.type-selector{gap:6px}.type-option{padding:6px 10px;font-size:.8rem}}
+.image-preview{max-width:200px;max-height:150px;border-radius:var(--r);margin-top:8px;display:none}
+.view-item-info{font-size:.85rem;color:var(--t2);line-height:1.7;padding:8px 0}
+.view-item-info strong{color:var(--t3);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px}
+.view-item-info a{color:var(--blue)}
+@media(max-width:600px){.main{padding-left:16px;padding-right:16px}.item-row{padding:12px 14px}.type-selector{gap:6px}.type-option{padding:6px 10px;font-size:.8rem}.modal{padding:24px 18px}}
 </style>
 </head>
 <body>
@@ -106,6 +112,9 @@ body{font-family:var(--rb);background:var(--bg);color:var(--t2);-webkit-font-smo
 </header>
 
 <main class="main">
+  <div class="toolbar">
+    <h2 id="pageTitle">Items</h2>
+  </div>
   <div class="alert" id="alert"></div>
   <div class="spinner-lg" id="spinner"></div>
   <div class="items-list" id="itemsList"></div>
@@ -117,7 +126,7 @@ body{font-family:var(--rb);background:var(--bg);color:var(--t2);-webkit-font-smo
     <h3 id="itemModalTitle">New Item</h3>
     <div class="alert" id="modalAlert"></div>
     <input type="hidden" id="editItemId" value="">
-    <div class="field" id="typeField">
+    <div id="typeField">
       <label class="field-label">Type</label>
       <div class="type-selector" id="typeSelector">
         <div class="type-option selected" data-type="note" onclick="selectType('note')">
@@ -126,7 +135,7 @@ body{font-family:var(--rb);background:var(--bg);color:var(--t2);-webkit-font-smo
         </div>
         <div class="type-option" data-type="password" onclick="selectType('password')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Password
+          Key
         </div>
         <div class="type-option" data-type="link" onclick="selectType('link')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -145,7 +154,35 @@ body{font-family:var(--rb);background:var(--bg);color:var(--t2);-webkit-font-smo
     <div id="dynamicFields"></div>
     <div class="modal-actions" id="modalActions">
       <button class="btn btn-outline" onclick="closeItemModal()">Cancel</button>
-      <button class="btn btn-primary" id="saveItemBtn" onclick="saveItem()">Save</button>
+      <button class="btn btn-primary" id="saveItemBtn" onclick="saveItem()">
+        <span id="saveBtnText">Save</span>
+        <span class="spinner" id="saveSpinner"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- View Item Modal -->
+<div class="modal-overlay" id="viewModal">
+  <div class="modal">
+    <h3 id="viewModalTitle">Item Details</h3>
+    <div id="viewContent"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeViewModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <h3>Delete item?</h3>
+    <p style="font-size:.9rem;color:var(--t3);margin-bottom:8px">This action cannot be undone.</p>
+    <div class="alert" id="deleteAlert"></div>
+    <input type="hidden" id="deleteItemId" value="">
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
     </div>
   </div>
 </div>
@@ -170,27 +207,28 @@ if (!folderId) { window.location.href = 'drive.html'; }
 
 let currentType = 'note';
 
+// Crypto helpers
+function strToBuf(str) { return new TextEncoder().encode(str); }
+function bufToB64(buf) { return btoa(String.fromCharCode(...new Uint8Array(buf))); }
+function b64ToBuf(b64) { return Uint8Array.from(atob(b64), c => c.charCodeAt(0)); }
+
 async function getKey() {
-  const raw = Uint8Array.from(atob(masterKeyB64), c => c.charCodeAt(0));
+  const raw = b64ToBuf(masterKeyB64);
   return await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt', 'decrypt']);
 }
 
 async function encrypt(text) {
   const key = await getKey();
-  const encoder = new TextEncoder();
   const iv = crypto.getRandomValues(new Uint8Array(12));
-  const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, encoder.encode(text));
-  return {
-    encrypted: btoa(String.fromCharCode(...new Uint8Array(encrypted))),
-    iv: btoa(String.fromCharCode(...iv))
-  };
+  const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, strToBuf(text));
+  return { encrypted: bufToB64(encrypted), iv: bufToB64(iv) };
 }
 
 async function decrypt(encryptedB64, ivB64) {
   try {
     const key = await getKey();
-    const iv = Uint8Array.from(atob(ivB64), c => c.charCodeAt(0));
-    const encrypted = Uint8Array.from(atob(encryptedB64), c => c.charCodeAt(0));
+    const iv = b64ToBuf(ivB64);
+    const encrypted = b64ToBuf(encryptedB64);
     const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, encrypted);
     return new TextDecoder().decode(decrypted);
   } catch { return null; }
@@ -237,24 +275,24 @@ function renderDynamicFields() {
   const container = document.getElementById('dynamicFields');
   if (currentType === 'password') {
     container.innerHTML = `
-      <div class="field"><label class="field-label" for="fieldUsername">Username</label><input type="text" class="field-input" id="fieldUsername" placeholder="Username"></div>
-      <div class="field"><label class="field-label" for="fieldPassword">Password</label><input type="text" class="field-input" id="fieldPassword" placeholder="Password"></div>
-      <div class="field"><label class="field-label" for="fieldUrl">URL (optional)</label><input type="url" class="field-input" id="fieldUrl" placeholder="https://..."></div>
+      <div class="field"><label class="field-label" for="fieldUsername">Username</label><input type="text" class="field-input" id="fieldUsername" placeholder="Username or email"></div>
+      <div class="field"><label class="field-label" for="fieldPassword">Password</label><div style="display:flex;gap:8px"><input type="text" class="field-input" id="fieldPassword" placeholder="Password" style="flex:1"><button type="button" class="btn btn-outline" onclick="generatePassword()" style="white-space:nowrap">Generate</button></div></div>
+      <div class="field"><label class="field-label" for="fieldUrl">URL (optional)</label><input type="url" class="field-input" id="fieldUrl" placeholder="https://example.com"></div>
     `;
   } else if (currentType === 'note') {
     container.innerHTML = `
-      <div class="field"><label class="field-label" for="fieldNote">Note</label><textarea class="field-textarea" id="fieldNote" placeholder="Write your note..."></textarea></div>
+      <div class="field"><label class="field-label" for="fieldNote">Note</label><textarea class="field-textarea" id="fieldNote" placeholder="Write your note here..." style="min-height:120px"></textarea></div>
     `;
   } else if (currentType === 'link') {
     container.innerHTML = `
       <div class="field"><label class="field-label" for="fieldLinkUrl">URL</label><input type="url" class="field-input" id="fieldLinkUrl" placeholder="https://..."></div>
-      <div class="field"><label class="field-label" for="fieldLinkDesc">Description (optional)</label><input type="text" class="field-input" id="fieldLinkDesc" placeholder="Description"></div>
+      <div class="field"><label class="field-label" for="fieldLinkDesc">Description (optional)</label><input type="text" class="field-input" id="fieldLinkDesc" placeholder="What this link is about"></div>
     `;
   } else if (currentType === 'image') {
     container.innerHTML = `
       <div class="field"><label class="field-label" for="fieldImageFile">Upload Image</label><input type="file" class="field-input" id="fieldImageFile" accept="image/*" onchange="previewImage(this)"></div>
-      <img class="image-preview" id="imagePreview" style="display:none">
-      <div class="field"><label class="field-label" for="fieldImageUrl">Or paste image URL</label><input type="url" class="field-input" id="fieldImageUrl" placeholder="https://..."></div>
+      <img class="image-preview" id="imagePreview">
+      <div class="field"><label class="field-label" for="fieldImageUrl">Or paste image URL</label><input type="url" class="field-input" id="fieldImageUrl" placeholder="https://i.imgur.com/..."></div>
     `;
   }
 }
@@ -268,15 +306,21 @@ function previewImage(input) {
   }
 }
 
+function generatePassword() {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+  let pass = '';
+  for (let i = 0; i < 20; i++) pass += chars[Math.floor(Math.random() * chars.length)];
+  document.getElementById('fieldPassword').value = pass;
+}
+
+// ====== MODALS ======
 function openNewItemModal() {
   clearModalAlert();
   document.getElementById('itemModalTitle').textContent = 'New Item';
   document.getElementById('editItemId').value = '';
   document.getElementById('itemTitle').value = '';
-  document.getElementById('saveItemBtn').textContent = 'Save';
+  document.getElementById('saveBtnText').textContent = 'Save';
   document.getElementById('typeField').style.display = 'block';
-  document.getElementById('typeSelector').style.display = 'flex';
-  // Remove delete button if exists
   const delBtn = document.getElementById('deleteItemBtn');
   if (delBtn) delBtn.remove();
   selectType('note');
@@ -284,21 +328,20 @@ function openNewItemModal() {
   document.getElementById('itemTitle').focus();
 }
 
-function openEditItemModal(item) {
+async function openEditItemModal(item) {
   clearModalAlert();
   document.getElementById('itemModalTitle').textContent = 'Edit Item';
   document.getElementById('editItemId').value = item.id;
-  document.getElementById('saveItemBtn').textContent = 'Update';
+  document.getElementById('saveBtnText').textContent = 'Update';
   document.getElementById('typeField').style.display = 'none';
   currentType = item.type;
   renderDynamicFields();
 
-  decrypt(item.title_enc, item.iv).then(title => {
-    document.getElementById('itemTitle').value = title || '';
-  });
+  const title = await decrypt(item.title_enc, item.iv);
+  document.getElementById('itemTitle').value = title || '';
 
-  decrypt(item.data_enc, item.iv).then(async dataStr => {
-    if (!dataStr) return;
+  const dataStr = await decrypt(item.data_enc, item.iv);
+  if (dataStr) {
     try {
       const data = JSON.parse(dataStr);
       setTimeout(() => {
@@ -313,23 +356,23 @@ function openEditItemModal(item) {
           document.getElementById('fieldLinkDesc').value = data.description || '';
         } else if (item.type === 'image') {
           document.getElementById('fieldImageUrl').value = data.imgbb_url || data.url || '';
-          if (data.imgbb_url) {
-            document.getElementById('imagePreview').src = data.imgbb_url;
-            document.getElementById('imagePreview').style.display = 'block';
+          if (data.imgbb_url || data.url) {
+            const preview = document.getElementById('imagePreview');
+            preview.src = data.imgbb_url || data.url;
+            preview.style.display = 'block';
           }
         }
       }, 100);
     } catch {}
-  });
+  }
 
-  // Add delete button
   const actions = document.getElementById('modalActions');
   if (!document.getElementById('deleteItemBtn')) {
     const delBtn = document.createElement('button');
     delBtn.id = 'deleteItemBtn';
     delBtn.className = 'btn btn-danger';
     delBtn.textContent = 'Delete';
-    delBtn.onclick = () => deleteItem(item.id);
+    delBtn.onclick = () => { closeItemModal(); openDeleteModal(item.id); };
     actions.insertBefore(delBtn, actions.firstChild);
   }
 
@@ -342,6 +385,71 @@ function closeItemModal() {
   if (delBtn) delBtn.remove();
 }
 
+function openDeleteModal(id) {
+  document.getElementById('deleteItemId').value = id;
+  document.getElementById('deleteModal').classList.add('open');
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('open');
+}
+
+async function confirmDelete() {
+  const id = document.getElementById('deleteItemId').value;
+  const res = await fetch(API + '/items/' + id, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  closeDeleteModal();
+  if (res.ok) { showToast('Item deleted.'); loadItems(); }
+  else { showToast('Failed to delete item.'); }
+}
+
+function openViewModal(item) {
+  document.getElementById('viewModalTitle').textContent = 'Item Details';
+  const content = document.getElementById('viewContent');
+  content.innerHTML = '<div class="spinner-lg"></div>';
+  document.getElementById('viewModal').classList.add('open');
+
+  decrypt(item.title_enc, item.iv).then(title => {
+    decrypt(item.data_enc, item.iv).then(dataStr => {
+      let html = `<p style="font-weight:500;margin-bottom:12px">${esc(title || 'Untitled')}</p>`;
+      html += `<p style="font-size:.8rem;color:var(--t4);margin-bottom:12px">Type: ${item.type} | Updated: ${new Date(item.updated_at || item.created_at).toLocaleString()}</p>`;
+      if (dataStr) {
+        try {
+          const data = JSON.parse(dataStr);
+          if (item.type === 'password') {
+            html += `<div class="view-item-info"><strong>Username</strong><br>${esc(data.username || '-')}</div>`;
+            html += `<div class="view-item-info"><strong>Password</strong><br><span id="viewPass">${esc(data.password || '-')}</span> <button class="copy-btn" onclick="copyViewPass()">Copy</button></div>`;
+            if (data.url) html += `<div class="view-item-info"><strong>URL</strong><br><a href="${esc(data.url)}" target="_blank">${esc(data.url)}</a></div>`;
+            window._viewPass = data.password || '';
+          } else if (item.type === 'note') {
+            html += `<div class="view-item-info"><strong>Note</strong><br>${esc(data.text || '').replace(/\n/g,'<br>')}</div>`;
+          } else if (item.type === 'link') {
+            html += `<div class="view-item-info"><strong>URL</strong><br><a href="${esc(data.url)}" target="_blank">${esc(data.url)}</a></div>`;
+            if (data.description) html += `<div class="view-item-info"><strong>Description</strong><br>${esc(data.description)}</div>`;
+          } else if (item.type === 'image') {
+            const imgUrl = data.imgbb_url || data.url;
+            if (imgUrl) html += `<img src="${esc(imgUrl)}" style="max-width:100%;border-radius:var(--r)">`;
+          }
+        } catch {}
+      }
+      content.innerHTML = html;
+    });
+  });
+}
+
+function closeViewModal() {
+  document.getElementById('viewModal').classList.remove('open');
+}
+
+window.copyViewPass = function() {
+  if (window._viewPass) {
+    navigator.clipboard.writeText(window._viewPass).then(() => showToast('Copied to clipboard.'));
+  }
+};
+
+// ====== SAVE ITEM ======
 async function saveItem() {
   const title = document.getElementById('itemTitle').value.trim();
   if (!title) { showModalAlert('Please enter a title.'); return; }
@@ -353,7 +461,6 @@ async function saveItem() {
     const username = document.getElementById('fieldUsername')?.value || '';
     const password = document.getElementById('fieldPassword')?.value || '';
     const url = document.getElementById('fieldUrl')?.value || '';
-    if (!username && !password) { showModalAlert('Please enter username or password.'); return; }
     dataObj = { username, password, url };
   } else if (currentType === 'note') {
     dataObj = { text: document.getElementById('fieldNote')?.value || '' };
@@ -366,7 +473,6 @@ async function saveItem() {
     const imageUrl = document.getElementById('fieldImageUrl')?.value || '';
 
     if (imageFile) {
-      // Upload to imgbb if key is configured
       const settingsRes = await fetch(API + '/settings', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
@@ -384,11 +490,11 @@ async function saveItem() {
             if (uploadData.success) {
               dataObj = { imgbb_url: uploadData.data.url, delete_url: uploadData.data.delete_url };
             } else {
-              showModalAlert('Image upload failed. Check your imgbb key in settings.');
+              showModalAlert('Image upload failed. Check your imgbb key in Settings.');
               return;
             }
           } catch {
-            showModalAlert('Image upload failed. Check your internet connection.');
+            showModalAlert('Upload failed. Check your connection.');
             return;
           }
         }
@@ -404,57 +510,43 @@ async function saveItem() {
     }
   }
 
+  // Set loading
+  const saveBtn = document.getElementById('saveItemBtn');
+  saveBtn.disabled = true;
+  document.getElementById('saveSpinner').style.display = 'inline-block';
+  document.getElementById('saveBtnText').style.display = 'none';
+
   const titleEnc = await encrypt(title);
   const dataEnc = await encrypt(JSON.stringify(dataObj));
 
-  if (editId) {
-    const res = await fetch(API + '/items/' + editId, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ title_enc: titleEnc.encrypted, data_enc: dataEnc.encrypted, iv: titleEnc.iv })
-    });
-    if (!res.ok) { showModalAlert('Failed to update item.'); return; }
-    showToast('Item updated.');
-  } else {
-    const res = await fetch(API + '/items', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({
-        folder_id: parseInt(folderId),
-        type: currentType,
-        title_enc: titleEnc.encrypted,
-        data_enc: dataEnc.encrypted,
-        iv: titleEnc.iv
-      })
-    });
-    if (!res.ok) { showModalAlert('Failed to create item.'); return; }
-    showToast('Item created.');
-  }
+  const url = editId ? API + '/items/' + editId : API + '/items';
+  const method = editId ? 'PUT' : 'POST';
+  const body = editId
+    ? { title_enc: titleEnc.encrypted, data_enc: dataEnc.encrypted, iv: titleEnc.iv }
+    : { folder_id: parseInt(folderId), type: currentType, title_enc: titleEnc.encrypted, data_enc: dataEnc.encrypted, iv: titleEnc.iv };
 
-  closeItemModal();
-  loadItems();
-}
-
-async function deleteItem(id) {
-  const res = await fetch(API + '/items/' + id, {
-    method: 'DELETE',
-    headers: { 'Authorization': 'Bearer ' + token }
-  });
-  if (!res.ok) { showToast('Failed to delete item.'); return; }
-  showToast('Item deleted.');
-  closeItemModal();
-  loadItems();
-}
-
-async function copyToClipboard(text) {
   try {
-    await navigator.clipboard.writeText(text);
-    showToast('Copied to clipboard.');
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) { showModalAlert('Failed to save item.'); }
+    else {
+      showToast(editId ? 'Item updated.' : 'Item created.');
+      closeItemModal();
+      loadItems();
+    }
   } catch {
-    showToast('Failed to copy.');
+    showModalAlert('Network error.');
   }
+
+  saveBtn.disabled = false;
+  document.getElementById('saveSpinner').style.display = 'none';
+  document.getElementById('saveBtnText').style.display = 'inline';
 }
 
+// ====== LOAD ITEMS ======
 async function loadItems() {
   const list = document.getElementById('itemsList');
   const spinner = document.getElementById('spinner');
@@ -471,6 +563,7 @@ async function loadItems() {
     if (data.folder) {
       const name = await decrypt(data.folder.name_enc, data.folder.iv);
       document.getElementById('folderTitle').textContent = name || 'Folder';
+      document.getElementById('pageTitle').textContent = name || 'Items';
     }
 
     spinner.style.display = 'none';
@@ -481,7 +574,7 @@ async function loadItems() {
         <div class="empty-state">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <h3>No items yet</h3>
-          <p>Add notes, links, passwords, or images to this folder</p>
+          <p>Add notes, links, keys, or images to this folder</p>
           <button class="btn btn-primary" onclick="openNewItemModal()">Add Item</button>
         </div>
       `;
@@ -492,7 +585,7 @@ async function loadItems() {
       const title = await decrypt(item.title_enc, item.iv);
       const row = document.createElement('div');
       row.className = 'item-row';
-      row.onclick = () => openEditItemModal(item);
+      row.style.cursor = 'pointer';
       row.innerHTML = `
         <div class="item-icon" style="background:${getColor(item.type)}">
           ${getIcon(item.type)}
@@ -501,64 +594,26 @@ async function loadItems() {
           <div class="item-title">${esc(title || 'Untitled')}</div>
           <div class="item-sub">${item.type} &middot; ${new Date(item.updated_at || item.created_at).toLocaleDateString()}</div>
         </div>
-        <div class="item-actions">
-          ${item.type === 'password' ? '<button class="icon-btn" onclick="event.stopPropagation();copyPassword(' + item.id + ')" title="Copy password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>' : ''}
-          ${item.type === 'link' ? '<button class="icon-btn" onclick="event.stopPropagation();openLink(' + item.id + ')" title="Open link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button>' : ''}
+        <div class="item-actions" style="display:flex;gap:4px">
+          <button class="icon-btn view-btn" title="View details" style="width:32px;height:32px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button class="icon-btn edit-btn" title="Edit" style="width:32px;height:32px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="icon-btn delete-btn" title="Delete" style="width:32px;height:32px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
         </div>
       `;
-      // Store item data for actions
-      row._itemData = item;
+
+      // Event listeners
+      row.querySelector('.view-btn').onclick = (e) => { e.stopPropagation(); openViewModal(item); };
+      row.querySelector('.edit-btn').onclick = (e) => { e.stopPropagation(); openEditItemModal(item); };
+      row.querySelector('.delete-btn').onclick = (e) => { e.stopPropagation(); openDeleteModal(item.id); };
+      row.onclick = () => openViewModal(item);
+
       list.appendChild(row);
-    }
-
-    // Add global click handlers
-    window.copyPassword = async function(id) {
-      const row = document.querySelector(`.item-row[data-id="${id}"]`) || [...document.querySelectorAll('.item-row')].find(r => r._itemData?.id === id);
-      if (row?._itemData) {
-        const dataStr = await decrypt(row._itemData.data_enc, row._itemData.iv);
-        try {
-          const data = JSON.parse(dataStr);
-          await copyToClipboard(data.password || '');
-        } catch {}
-      }
-    };
-
-    window.openLink = async function(id) {
-      const row = [...document.querySelectorAll('.item-row')].find(r => r._itemData?.id === id);
-      if (row?._itemData) {
-        const dataStr = await decrypt(row._itemData.data_enc, row._itemData.iv);
-        try {
-          const data = JSON.parse(dataStr);
-          if (data.url) window.open(data.url, '_blank');
-        } catch {}
-      }
-    };
-
-    // Fix: make per-item copyPassword/openLink work via closure
-    for (const row of list.querySelectorAll('.item-row')) {
-      const itemData = row._itemData;
-      const copyBtn = row.querySelector('[title="Copy password"]');
-      const openBtn = row.querySelector('[title="Open link"]');
-      if (copyBtn) {
-        copyBtn.onclick = async (e) => {
-          e.stopPropagation();
-          const dataStr = await decrypt(itemData.data_enc, itemData.iv);
-          try {
-            const data = JSON.parse(dataStr);
-            await copyToClipboard(data.password || '');
-          } catch {}
-        };
-      }
-      if (openBtn) {
-        openBtn.onclick = async (e) => {
-          e.stopPropagation();
-          const dataStr = await decrypt(itemData.data_enc, itemData.iv);
-          try {
-            const data = JSON.parse(dataStr);
-            if (data.url) window.open(data.url, '_blank');
-          } catch {}
-        };
-      }
     }
   } catch {
     spinner.style.display = 'none';
@@ -584,10 +639,11 @@ function getIcon(type) {
 function logout() {
   localStorage.removeItem('sw_token');
   localStorage.removeItem('sw_user');
-  sessionStorage.removeItem('sw_master_key');
+  sessionStorage.clear();
   window.location.href = 'index.html';
 }
 
+// Auto-lock after 10 min idle
 let idleTimer;
 function resetIdleTimer() {
   clearTimeout(idleTimer);
@@ -601,9 +657,13 @@ document.addEventListener('keydown', resetIdleTimer);
 document.addEventListener('click', resetIdleTimer);
 resetIdleTimer();
 
+// Close modals
 document.getElementById('itemModal').addEventListener('click', function(e) { if (e.target === this) closeItemModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeItemModal(); });
+document.getElementById('viewModal').addEventListener('click', function(e) { if (e.target === this) closeViewModal(); });
+document.getElementById('deleteModal').addEventListener('click', function(e) { if (e.target === this) closeDeleteModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeItemModal(); closeViewModal(); closeDeleteModal(); } });
 
+// Init
 loadItems();
 </script>
 </body>
