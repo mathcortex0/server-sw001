@@ -143,7 +143,6 @@ function handleLogout() {
   window.location.href = 'index.html';
 }
 
-// Simple string-to-buffer helper
 function strToBuf(str) {
   return new TextEncoder().encode(str);
 }
@@ -178,7 +177,7 @@ async function deriveKey(passphrase, salt) {
       name: 'AES-GCM',
       length: 256
     },
-    false,
+    true,
     ['encrypt', 'decrypt']
   );
 }
@@ -207,18 +206,14 @@ async function decrypt(encryptedB64, ivB64, key) {
     );
     return new TextDecoder().decode(decrypted);
   } catch (e) {
-    console.error('Decrypt failed:', e);
     return null;
   }
 }
 
-// Check if first time
 function isFirstTime() {
-  const test = localStorage.getItem('sw_test_encrypted');
-  return !test;
+  return !localStorage.getItem('sw_test_encrypted');
 }
 
-// Update UI
 if (isFirstTime()) {
   document.getElementById('unlockTitle').textContent = 'Create your passphrase';
   document.getElementById('unlockSub').innerHTML = '<span class="first-time-badge">First time setup</span><br>Create a passphrase to secure your files';
@@ -244,7 +239,7 @@ document.getElementById('unlockForm').addEventListener('submit', async function(
   setLoading(true);
 
   try {
-    // Step 1: Get salt
+    // Step 1: Get salt from server
     let salt = 'sw001-default-salt-fallback';
     
     try {
@@ -256,17 +251,17 @@ document.getElementById('unlockForm').addEventListener('submit', async function(
         }
       }
     } catch (saltErr) {
-      console.warn('Could not fetch salt, using fallback:', saltErr);
+      console.warn('Salt fetch failed, using fallback');
     }
 
-    // Step 2: Derive key
+    // Step 2: Derive key from passphrase + salt
     const key = await deriveKey(passphrase, salt);
 
-    // Step 3: Check if first time or verify
+    // Step 3: Verify or setup
     const storedTest = localStorage.getItem('sw_test_encrypted');
 
     if (storedTest) {
-      // Returning user — verify
+      // Returning user — verify passphrase
       const test = JSON.parse(storedTest);
       const decrypted = await decrypt(test.encrypted, test.iv, key);
       
@@ -281,7 +276,7 @@ document.getElementById('unlockForm').addEventListener('submit', async function(
       localStorage.setItem('sw_test_encrypted', JSON.stringify(testEncrypted));
     }
 
-    // Step 4: Store master key in session (RAM only)
+    // Step 4: Export key to store in session (RAM only)
     const rawKey = await crypto.subtle.exportKey('raw', key);
     const keyB64 = bufToB64(rawKey);
     sessionStorage.setItem('sw_master_key', keyB64);
