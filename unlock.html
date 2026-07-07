@@ -54,8 +54,6 @@ body{
 .btn-primary{background:var(--blue);color:#fff}
 .btn-primary:hover{background:var(--blue-h);box-shadow:0 1px 2px rgba(60,64,67,.3),0 2px 6px rgba(60,64,67,.15)}
 .btn-primary:disabled{background:var(--hov);color:var(--t4);cursor:not-allowed;box-shadow:none}
-.btn-outline{background:transparent;color:var(--blue);border:1px solid var(--border);width:auto;padding:10px 18px;font-size:.8rem}
-.btn-outline:hover{background:#e8f0fe;border-color:var(--blue)}
 .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .toast{
@@ -68,6 +66,10 @@ body{
 .small-link{display:block;text-align:center;margin-top:16px}
 .small-link button{background:none;border:none;color:var(--blue);cursor:pointer;font-family:var(--rb);font-size:.8rem;font-weight:500}
 .small-link button:hover{text-decoration:underline}
+.first-time-badge{
+  display:inline-block;background:#e8f0fe;color:var(--blue);font-size:.7rem;
+  font-weight:500;padding:2px 8px;border-radius:100px;margin-bottom:8px
+}
 </style>
 </head>
 <body>
@@ -78,8 +80,8 @@ body{
       <circle cx="12" cy="12" r="10"/>
       <polyline points="12 6 12 12 16 14"/>
     </svg>
-    <h1>Enter passphrase to sync</h1>
-    <p>Your passphrase is needed to access your files</p>
+    <h1 id="unlockTitle">Enter passphrase to sync</h1>
+    <p id="unlockSub">Your passphrase is needed to access your files</p>
   </div>
   <div class="alert" id="alert"></div>
   <form id="unlockForm" autocomplete="off">
@@ -178,11 +180,28 @@ async function decrypt(encryptedB64, ivB64, key) {
   }
 }
 
+// Check if this is first time
+function isFirstTime() {
+  return !localStorage.getItem('sw_test_encrypted');
+}
+
+// Update UI for first time
+if (isFirstTime()) {
+  document.getElementById('unlockTitle').textContent = 'Create your passphrase';
+  document.getElementById('unlockSub').innerHTML = '<span class="first-time-badge">First time</span><br>Create a passphrase to secure your files';
+  document.getElementById('btnText').textContent = 'Create & Unlock';
+}
+
 document.getElementById('unlockForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   clearAlert();
   const passphrase = document.getElementById('passphrase').value;
   if (!passphrase) { showAlert('Please enter your passphrase.'); return; }
+
+  if (passphrase.length < 6) {
+    showAlert('Passphrase must be at least 6 characters.');
+    return;
+  }
 
   setLoading(true);
   try {
@@ -191,19 +210,34 @@ document.getElementById('unlockForm').addEventListener('submit', async function(
     const saltData = await saltRes.json();
     const salt = saltData.salt || 'default-salt-value';
 
-    // Derive key
+    // Derive key from passphrase
     const key = await deriveKey(passphrase, salt);
 
-    // Verify by encrypting a known test string and storing it temporarily
-    const testEncrypted = await encrypt('__verify__', key);
-    localStorage.setItem('sw_test_encrypted', JSON.stringify(testEncrypted));
+    // Check if FIRST TIME or returning
+    const storedTest = localStorage.getItem('sw_test_encrypted');
 
-    // Verify we can decrypt it back
-    const decrypted = await decrypt(testEncrypted.encrypted, testEncrypted.iv, key);
-    if (decrypted !== '__verify__') {
-      showAlert('Incorrect passphrase.');
-      setLoading(false);
-      return;
+    if (storedTest) {
+      // === RETURNING USER ===
+      // Verify passphrase by decrypting stored test
+      try {
+        const test = JSON.parse(storedTest);
+        const decrypted = await decrypt(test.encrypted, test.iv, key);
+        if (decrypted !== '__verify__') {
+          showAlert('Incorrect passphrase. Please try again.');
+          setLoading(false);
+          return;
+        }
+        // Passphrase is correct
+      } catch {
+        showAlert('Incorrect passphrase. Please try again.');
+        setLoading(false);
+        return;
+      }
+    } else {
+      // === FIRST TIME USER ===
+      // Create and store the verification test
+      const testEncrypted = await encrypt('__verify__', key);
+      localStorage.setItem('sw_test_encrypted', JSON.stringify(testEncrypted));
     }
 
     // Store key in session storage (RAM only, cleared on tab close)
@@ -212,11 +246,11 @@ document.getElementById('unlockForm').addEventListener('submit', async function(
     sessionStorage.setItem('sw_master_key', keyB64);
     localStorage.setItem('sw_salt', salt);
 
-    localStorage.removeItem('sw_test_encrypted');
-    showToast('Synced successfully.');
+    showToast(storedTest ? 'Synced successfully.' : 'Passphrase created successfully.');
     setTimeout(() => { window.location.href = 'drive.html'; }, 300);
-  } catch {
-    showAlert('Incorrect passphrase.');
+  } catch (err) {
+    console.error(err);
+    showAlert('Something went wrong. Please try again.');
     setLoading(false);
   }
 });
