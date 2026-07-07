@@ -95,7 +95,7 @@ body{
     </button>
   </form>
   <div class="small-link">
-    <button onclick="window.location.href='index.html'">Back to sign in</button>
+    <button onclick="handleLogout()">Back to sign in</button>
   </div>
 </div>
 
@@ -136,121 +136,166 @@ function setLoading(loading) {
   document.getElementById('btnText').style.display = loading ? 'none' : 'inline';
 }
 
+function handleLogout() {
+  localStorage.removeItem('sw_token');
+  localStorage.removeItem('sw_user');
+  sessionStorage.clear();
+  window.location.href = 'index.html';
+}
+
+// Simple string-to-buffer helper
+function strToBuf(str) {
+  return new TextEncoder().encode(str);
+}
+
+function bufToB64(buf) {
+  return btoa(String.fromCharCode(...new Uint8Array(buf)));
+}
+
+function b64ToBuf(b64) {
+  return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+}
+
 // Derive AES-GCM key from passphrase + salt using PBKDF2
 async function deriveKey(passphrase, salt) {
-  const encoder = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey(
-    'raw', encoder.encode(passphrase), 'PBKDF2', false, ['deriveKey']
+    'raw',
+    strToBuf(passphrase),
+    'PBKDF2',
+    false,
+    ['deriveKey']
   );
+  
   return await crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt: encoder.encode(salt), iterations: 100000, hash: 'SHA-256' },
+    {
+      name: 'PBKDF2',
+      salt: strToBuf(salt),
+      iterations: 100000,
+      hash: 'SHA-256'
+    },
     keyMaterial,
-    { name: 'AES-GCM', length: 256 },
+    {
+      name: 'AES-GCM',
+      length: 256
+    },
     false,
     ['encrypt', 'decrypt']
   );
 }
 
 async function encrypt(text, key) {
-  const encoder = new TextEncoder();
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const encrypted = await crypto.subtle.encrypt(
     { name: 'AES-GCM', iv },
     key,
-    encoder.encode(text)
+    strToBuf(text)
   );
-  const encryptedArray = Array.from(new Uint8Array(encrypted));
-  const ivB64 = btoa(String.fromCharCode(...iv));
-  const dataB64 = btoa(String.fromCharCode(...encryptedArray));
-  return { encrypted: dataB64, iv: ivB64 };
+  return {
+    encrypted: bufToB64(encrypted),
+    iv: bufToB64(iv)
+  };
 }
 
 async function decrypt(encryptedB64, ivB64, key) {
   try {
-    const iv = Uint8Array.from(atob(ivB64), c => c.charCodeAt(0));
-    const encrypted = Uint8Array.from(atob(encryptedB64), c => c.charCodeAt(0));
+    const iv = b64ToBuf(ivB64);
+    const encrypted = b64ToBuf(encryptedB64);
     const decrypted = await crypto.subtle.decrypt(
       { name: 'AES-GCM', iv },
       key,
       encrypted
     );
     return new TextDecoder().decode(decrypted);
-  } catch {
+  } catch (e) {
+    console.error('Decrypt failed:', e);
     return null;
   }
 }
 
-// Check if this is first time
+// Check if first time
 function isFirstTime() {
-  return !localStorage.getItem('sw_test_encrypted');
+  const test = localStorage.getItem('sw_test_encrypted');
+  return !test;
 }
 
-// Update UI for first time
+// Update UI
 if (isFirstTime()) {
   document.getElementById('unlockTitle').textContent = 'Create your passphrase';
-  document.getElementById('unlockSub').innerHTML = '<span class="first-time-badge">First time</span><br>Create a passphrase to secure your files';
+  document.getElementById('unlockSub').innerHTML = '<span class="first-time-badge">First time setup</span><br>Create a passphrase to secure your files';
   document.getElementById('btnText').textContent = 'Create & Unlock';
 }
 
 document.getElementById('unlockForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   clearAlert();
-  const passphrase = document.getElementById('passphrase').value;
-  if (!passphrase) { showAlert('Please enter your passphrase.'); return; }
+  
+  const passphrase = document.getElementById('passphrase').value.trim();
+  
+  if (!passphrase) {
+    showAlert('Please enter your passphrase.');
+    return;
+  }
 
-  if (passphrase.length < 6) {
-    showAlert('Passphrase must be at least 6 characters.');
+  if (passphrase.length < 4) {
+    showAlert('Passphrase must be at least 4 characters.');
     return;
   }
 
   setLoading(true);
-  try {
-    // Get salt from server
-    const saltRes = await fetch(API + '/auth/salt');
-    const saltData = await saltRes.json();
-    const salt = saltData.salt || 'default-salt-value';
 
-    // Derive key from passphrase
+  try {
+    // Step 1: Get salt
+    let salt = 'sw001-default-salt-fallback';
+    
+    try {
+      const saltRes = await fetch(API + '/auth/salt');
+      if (saltRes.ok) {
+        const saltData = await saltRes.json();
+        if (saltData.salt) {
+          salt = saltData.salt;
+        }
+      }
+    } catch (saltErr) {
+      console.warn('Could not fetch salt, using fallback:', saltErr);
+    }
+
+    // Step 2: Derive key
     const key = await deriveKey(passphrase, salt);
 
-    // Check if FIRST TIME or returning
+    // Step 3: Check if first time or verify
     const storedTest = localStorage.getItem('sw_test_encrypted');
 
     if (storedTest) {
-      // === RETURNING USER ===
-      // Verify passphrase by decrypting stored test
-      try {
-        const test = JSON.parse(storedTest);
-        const decrypted = await decrypt(test.encrypted, test.iv, key);
-        if (decrypted !== '__verify__') {
-          showAlert('Incorrect passphrase. Please try again.');
-          setLoading(false);
-          return;
-        }
-        // Passphrase is correct
-      } catch {
+      // Returning user — verify
+      const test = JSON.parse(storedTest);
+      const decrypted = await decrypt(test.encrypted, test.iv, key);
+      
+      if (decrypted !== '__verify__') {
         showAlert('Incorrect passphrase. Please try again.');
         setLoading(false);
         return;
       }
     } else {
-      // === FIRST TIME USER ===
-      // Create and store the verification test
+      // First time — create verification test
       const testEncrypted = await encrypt('__verify__', key);
       localStorage.setItem('sw_test_encrypted', JSON.stringify(testEncrypted));
     }
 
-    // Store key in session storage (RAM only, cleared on tab close)
+    // Step 4: Store master key in session (RAM only)
     const rawKey = await crypto.subtle.exportKey('raw', key);
-    const keyB64 = btoa(String.fromCharCode(...new Uint8Array(rawKey)));
+    const keyB64 = bufToB64(rawKey);
     sessionStorage.setItem('sw_master_key', keyB64);
     localStorage.setItem('sw_salt', salt);
 
-    showToast(storedTest ? 'Synced successfully.' : 'Passphrase created successfully.');
-    setTimeout(() => { window.location.href = 'drive.html'; }, 300);
+    showToast(storedTest ? 'Unlocked successfully.' : 'Passphrase created.');
+    
+    setTimeout(() => {
+      window.location.href = 'drive.html';
+    }, 400);
+
   } catch (err) {
-    console.error(err);
-    showAlert('Something went wrong. Please try again.');
+    console.error('Unlock error:', err);
+    showAlert('Something went wrong: ' + (err.message || 'Unknown error'));
     setLoading(false);
   }
 });
